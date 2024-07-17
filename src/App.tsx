@@ -11,7 +11,7 @@ const generateRandomNumbers = (N: number): number[] =>
     Array.from(Array(N), Math.random);
 
 const App = () => {
-    const N = 90;
+    const N = 100;
     const [array, setArray] = useState<number[]>(() =>
         generateRandomNumbers(N)
     );
