@@ -1,17 +1,20 @@
 import { useState } from "react";
 import ShowBars from "./components/ShowBars";
 import { moveType } from "./types/types";
-// import bubbleSort from "./sorting-algos/bubbleSort";
-// import heapSort from "./sorting-algos/heapSort";
-// import insertionSort from "./sorting-algos/insertionSort";
-// import mergeSort from "./sorting-algos/mergeSort";
+import bubbleSort from "./sorting-algos/bubbleSort";
+import heapSort from "./sorting-algos/heapSort";
+import insertionSort from "./sorting-algos/insertionSort";
+import mergeSort from "./sorting-algos/mergeSort";
+import NavBar from "./components/NavBar";
 import quickSort from "./sorting-algos/quickSort";
+import { useContext } from "react";
+import SortContext from "./store/SortContext";
 
 const generateRandomNumbers = (N: number): number[] =>
     Array.from(Array(N), Math.random);
 
 const App = () => {
-    const N = 100;
+    const N = 50;
     const [array, setArray] = useState<number[]>(() =>
         generateRandomNumbers(N)
     );
@@ -19,14 +22,22 @@ const App = () => {
     const [initBtn, setInitBtn] = useState(false);
     const [playBtn, setPlayBtn] = useState(false);
 
+    const data = useContext(SortContext);
+
+    function getMoves(temp: number[]): moveType[] {
+        if (data.selectedSortType === "merge") return mergeSort(temp);
+
+        if (data.selectedSortType === "bubble") return bubbleSort(temp);
+
+        if (data.selectedSortType === "heap") return heapSort(temp);
+
+        if (data.selectedSortType === "quick") return quickSort(temp);
+
+        return insertionSort(temp);
+    }
+
     function play() {
-        const tempArray = [...array];
-        // const moves = bubbleSort(tempArray);
-        // const moves = mergeSort(tempArray);
-        // const moves = heapSort(tempArray);
-        // const moves = insertionSort(tempArray);
-        const moves = quickSort(tempArray);
-        // console.log(moves);
+        const moves = getMoves([...array]);
         animate(moves);
     }
 
@@ -62,6 +73,7 @@ const App = () => {
 
     return (
         <>
+            <NavBar />
             <ShowBars array={array} move={move} />
             <div id="buttons" className="text-center">
                 <button
